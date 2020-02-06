@@ -22,7 +22,6 @@ public class WebAppInitializer implements WebApplicationInitializer {
 		AnnotationConfigWebApplicationContext context= new AnnotationConfigWebApplicationContext();
 		context.setConfigLocation("com.springboot");
 		container.addListener(new ContextLoaderListener(context));
-		
 		ServletRegistration.Dynamic dispatcher= container.addServlet("dispatcher", new DispatcherServlet(context));
 		dispatcher.setLoadOnStartup(1);
 		dispatcher.addMapping("/");
