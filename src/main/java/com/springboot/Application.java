@@ -9,18 +9,17 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.springboot.model.User;
 import com.springboot.repository.UserRespository;
 
 @SpringBootApplication
-@RestController
+@Controller
+//@ComponentScan(basePackages="com.springboot")
 public class Application implements CommandLineRunner {
 	@Autowired
 	private UserRespository userRepository;
