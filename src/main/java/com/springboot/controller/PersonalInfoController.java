@@ -16,7 +16,7 @@ import com.springboot.services.PersonalInfoService;
 
 @RestController
 @RequestMapping("personalDetail")
-public class PersoanlInfoController {
+public class PersonalInfoController {
 
 	@Autowired
 	private PersonalInfoService personalService;

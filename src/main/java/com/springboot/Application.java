@@ -8,11 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.springboot.model.User;
 import com.springboot.repository.UserRespository;
@@ -23,9 +20,13 @@ import com.springboot.repository.UserRespository;
 public class Application implements CommandLineRunner {
 	@Autowired
 	private UserRespository userRepository;
+	
+	@Autowired
+	private BCryptPasswordEncoder bcrypt;
 
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
+//		openHomePage();
 	}
 
 	@Override
@@ -34,7 +35,7 @@ public class Application implements CommandLineRunner {
 		if (userList.size() < 1) {
 			User user = new User();
 			user.setUsername("abiral");
-			user.setPassword("abiral");
+			user.setPassword(bcrypt.encode("abiral"));
 			user.setIsAdmin(true);
 			user.setCreatedDate(new Date());
 			user.setDelFlg(false);
@@ -46,4 +47,13 @@ public class Application implements CommandLineRunner {
 			}
 		}
 	}
+	
+//	 private static void openHomePage() {
+//	        try {
+//	            URI homepage = new URI("http://localhost:9090/index");
+//	            Desktop.getDesktop().browse(homepage);
+//	        } catch (URISyntaxException | IOException e) {
+//	            e.printStackTrace();
+//	        }
+//	    }
 }

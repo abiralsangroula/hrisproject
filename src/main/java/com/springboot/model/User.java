@@ -45,5 +45,7 @@ public class User {
 	private String delReason;
 	@Column(name="del_date")
 	private Date delDate;
+	@Column(name="enabled")
+	private Boolean enabled;
 
 }

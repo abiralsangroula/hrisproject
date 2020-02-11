@@ -7,6 +7,7 @@ import java.util.Optional;
 import javax.persistence.NoResultException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.springboot.model.User;
@@ -16,6 +17,7 @@ import com.springboot.repository.UserRespository;
 public class UserService {
 	@Autowired
 	private UserRespository repository;
+	
 
 	public List<User> findAllUsers() {
 		return repository.findAll();
@@ -59,4 +61,5 @@ public class UserService {
 		}
 		return user;
 	}
+	
 }
