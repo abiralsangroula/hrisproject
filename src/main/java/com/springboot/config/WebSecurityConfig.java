@@ -23,6 +23,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter  {
 			.authorizeRequests()
 				.antMatchers("/", "/index").permitAll()
 				.antMatchers("/register").permitAll()
+				.antMatchers("/confirm-account").permitAll()
 				.anyRequest().authenticated()
 				.and()
 			.formLogin()

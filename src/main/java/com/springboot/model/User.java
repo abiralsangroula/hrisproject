@@ -34,6 +34,11 @@ public class User {
 	private String password;
 	@Column(name = "is_Admin")
 	private Boolean isAdmin;
+	@Column(name="email_id")
+	private String emailId;
+
+	@Column(name="Name")
+	private String name;
 	@JoinColumn(name = "created_by")
 	@ManyToOne
 	private User createdBy;

@@ -3,10 +3,30 @@
 	xmlns:th="https://www.thymeleaf.org"
 	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
-<meta charset="ISO-8859-1">
-<title>Insert title here</title>
+<title>Register</title>
 </head>
 <body>
-<h1>Register New User</h1>
+	<form action="#" th:action="@{/register}" th:object="${user}"
+		method="post">
+		<table>
+			<tr>
+				<td><label for="firstName">First Name</label></td>
+				<td><input th:field="*{name}" type="text" name="Name"></input></td>
+			</tr>
+			<tr>
+				<td><label for="emailId">Email</label></td>
+				<td><input th:field="*{emailId}" type="text" name="emailId"></input></td>
+			</tr>
+			<tr>
+				<td><label for="password">Password</label></td>
+				<td><input th:field="*{password}" type="password"
+					name="password"></input></td>
+			</tr>
+			<tr>
+				<td><input type="reset" value="Clear" /></td>
+				<td><input type="submit" value="Submit"></input></td>
+			</tr>
+		</table>
+	</form>
 </body>
 </html>

@@ -13,6 +13,8 @@ import com.springboot.model.User;
 @Repository
 public interface UserRespository extends JpaRepository<User, Long> {
 	
+	User findByEmailIdIgnoreCase(String emailId);
+	
 	@Transactional
 	@Modifying
 	@Query(value="update users set del_flg=false where id=:userId", nativeQuery=true)
