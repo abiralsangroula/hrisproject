@@ -1,5 +1,7 @@
 package com.springboot.controller;
 
+import java.util.Random;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -54,6 +56,8 @@ public class RegisterController {
 
 	@PostMapping("/register")
 	public ModelAndView registerUser(ModelAndView modelAndView, User user) {
+		Random random= new Random();
+		String confirm= String.format("%04d", random.nextInt(10000));
 		User existingUser = userRepository.findByEmailIdIgnoreCase(user.getEmailId());
 		if (existingUser != null) {
 			modelAndView.addObject("message", "This email already exists!");
@@ -70,9 +74,8 @@ public class RegisterController {
 			mailMessage.setTo(user.getEmailId());
 			mailMessage.setSubject("Complete Registration!");
 			mailMessage.setFrom(sentFrom);
-			mailMessage.setText("To confirm your account, please click here : "
+			mailMessage.setText("Use this number to activate"+ confirm+"\n \n To confirm your account, please click here : "
 					+ "http://localhost:9090/confirm-account?token=" + confirmationToken.getConfirmationToken());
-			System.out.println("spring .gekldsfa  "+mailMessage.getFrom());
 
 			emailSenderService.sendMail(mailMessage);
 
