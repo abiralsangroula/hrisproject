@@ -1,5 +1,8 @@
 package com.springboot.controller;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +33,7 @@ import lombok.Setter;
 @Setter
 @PropertySource("classpath:application.properties")
 public class RegisterController {
-	
+
 	@Value("${spring.mail.username}")
 	private String sentFrom;
 
@@ -42,13 +45,12 @@ public class RegisterController {
 
 	@Autowired
 	private EmailSenderService emailSenderService;
-	
+
 	@Autowired
 	BCryptPasswordEncoder bcrypt;
 
 	@GetMapping("/register")
 	public ModelAndView displayRegistraion(ModelAndView modelAndView, User user) {
-		System.out.println("register");
 		modelAndView.addObject("user", user);
 		modelAndView.setViewName("register");
 		return modelAndView;
@@ -56,13 +58,16 @@ public class RegisterController {
 
 	@PostMapping("/register")
 	public ModelAndView registerUser(ModelAndView modelAndView, User user) {
-		Random random= new Random();
-		String confirm= String.format("%04d", random.nextInt(10000));
+		Random random = new Random();
+		String confirm = String.format("%04d", random.nextInt(10000));
 		User existingUser = userRepository.findByEmailIdIgnoreCase(user.getEmailId());
 		if (existingUser != null) {
 			modelAndView.addObject("message", "This email already exists!");
 			modelAndView.setViewName("error");
 		} else {
+			user.setEnabled(false);
+			user.setCreatedDate(new Date());
+			user.setIsAdmin(false);
 			user.setPassword(bcrypt.encode(user.getPassword()));
 			userRepository.save(user);
 
@@ -74,7 +79,8 @@ public class RegisterController {
 			mailMessage.setTo(user.getEmailId());
 			mailMessage.setSubject("Complete Registration!");
 			mailMessage.setFrom(sentFrom);
-			mailMessage.setText("Use this number to activate"+ confirm+"\n \n To confirm your account, please click here : "
+			mailMessage.setText("Use this number to activate" + confirm
+					+ "\n \n To confirm your account, please click here : "
 					+ "http://localhost:9090/confirm-account?token=" + confirmationToken.getConfirmationToken());
 
 			emailSenderService.sendMail(mailMessage);
@@ -93,9 +99,17 @@ public class RegisterController {
 
 		if (token != null) {
 			User user = userRepository.findByEmailIdIgnoreCase(token.getUser().getEmailId());
-			user.setEnabled(true);
-			userRepository.save(user);
-			modelAndView.setViewName("accountVerified");
+			Date date = token.getExpiryDate();
+			Calendar cal = Calendar.getInstance();
+			if ((date.getTime() - cal.getTime().getTime()) <= 0) {
+				modelAndView.setViewName("tokenExpired");
+				System.out.println();
+			}else {
+				user.setEnabled(true);
+				userRepository.save(user);
+				modelAndView.setViewName("accountVerified");
+			}
+			
 		} else {
 			modelAndView.addObject("message", "The link is invalid or broken!");
 			modelAndView.setViewName("error");
@@ -103,10 +117,27 @@ public class RegisterController {
 
 		return modelAndView;
 	}
-}
-
-
-
-
-
 	
+	@GetMapping("/generateNew")
+	public ModelAndView generateNewToken(ModelAndView modelAndView, User user) {
+		modelAndView.addObject("user", user);
+		modelAndView.setViewName("generateNewRegToken");
+		return modelAndView;
+	}
+	
+	@PostMapping("/generateNew")
+	public ModelAndView generateNewTokenSelected(ModelAndView modelAndView , User user) {
+		User existingUser= userRepository.findByEmailIdIgnoreCase(user.getEmailId(), false);
+		if(existingUser != null) {
+			List<ConfirmationToken> userTokenList= confirmationTokenRepository.findByUserId(existingUser.getId());
+			ConfirmationToken deltoken=userTokenList.get(userTokenList.size()-1);
+			deltoken.setDelFlg(true);
+			confirmationTokenRepository.save(deltoken);
+			modelAndView.setViewName("redirect:/generateNewRegToken");
+		}
+		return modelAndView;
+	}
+	
+	
+
+}

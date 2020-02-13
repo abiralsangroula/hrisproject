@@ -1,5 +1,7 @@
 package com.springboot.model;
 
+import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
@@ -40,10 +42,26 @@ public class ConfirmationToken {
 	@OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)
 	@JoinColumn(nullable = false, name = "user_id")
 	private User user;
+	
+	@Column(name="del_flg")
+	private Boolean delFlg;
+	
+	@Column(name="expiry_date")
+	private Date expiryDate;
+	
+	private Date calculateExpiryDate(int hours) {
+	        Calendar cal = Calendar.getInstance();
+	        cal.setTime(new Date());
+	        cal.add(Calendar.SECOND, hours);
+	        return cal.getTime() ;
+	    }
+	     
 
 	public ConfirmationToken(User user) {
 		this.user = user;
+		delFlg=false;
 		createdDate = new Date();
+		expiryDate= calculateExpiryDate(24);
 		confirmationToken = UUID.randomUUID().toString();
 	}
 }

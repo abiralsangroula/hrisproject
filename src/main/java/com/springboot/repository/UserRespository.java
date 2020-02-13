@@ -15,6 +15,8 @@ public interface UserRespository extends JpaRepository<User, Long> {
 	
 	User findByEmailIdIgnoreCase(String emailId);
 	
+	User findByEmailIdIgnoreCase(String emailId, Boolean isEnabled);
+	
 	@Transactional
 	@Modifying
 	@Query(value="update users set del_flg=false where id=:userId", nativeQuery=true)
