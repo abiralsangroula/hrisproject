@@ -79,7 +79,7 @@ public class RegisterController {
 			mailMessage.setTo(user.getEmailId());
 			mailMessage.setSubject("Complete Registration!");
 			mailMessage.setFrom(sentFrom);
-			mailMessage.setText("Use this number to activate" + confirm
+			mailMessage.setText("Use this number to activate \t \t" + confirm
 					+ "\n \n To confirm your account, please click here : "
 					+ "http://localhost:9090/confirm-account?token=" + confirmationToken.getConfirmationToken());
 
@@ -127,7 +127,7 @@ public class RegisterController {
 	
 	@PostMapping("/generateNew")
 	public ModelAndView generateNewTokenSelected(ModelAndView modelAndView , User user) {
-		User existingUser= userRepository.findByEmailIdIgnoreCase(user.getEmailId(), false);
+		User existingUser= userRepository.findByEmailIgnoreCase(user.getEmailId(), false);
 		if(existingUser != null) {
 			List<ConfirmationToken> userTokenList= confirmationTokenRepository.findByUserId(existingUser.getId());
 			ConfirmationToken deltoken=userTokenList.get(userTokenList.size()-1);
@@ -137,7 +137,4 @@ public class RegisterController {
 		}
 		return modelAndView;
 	}
-	
-	
-
 }

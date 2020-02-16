@@ -15,7 +15,8 @@ public interface UserRespository extends JpaRepository<User, Long> {
 	
 	User findByEmailIdIgnoreCase(String emailId);
 	
-	User findByEmailIdIgnoreCase(String emailId, Boolean isEnabled);
+	@Query(value="Select u from users u where u.email_id=?1 and u.is_enabled=?2 and u.del_flg=false", nativeQuery=true)
+	User findByEmailIgnoreCase(String emailId, Boolean isEnabled);
 	
 	@Transactional
 	@Modifying
